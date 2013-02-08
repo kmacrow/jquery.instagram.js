@@ -4,7 +4,7 @@ A jQuery plugin to display your most recent Instagram photos.
 
 This is admittedly a bit of a hack, but a fairly tidy and useful one. Instagram requires an OAuth 2 authentication token to read a user's recent media, but we don't want to bother with OAuth.
 
-# Quick Start 
+# Quick start guide 
 
 * Register your app with Instagram <a href="http://instagram.com/developer/">here</a> and get a <code>client_id</code>
 * Tag photos you want to appear using a unique hash tag (E.g., #jane-doe-jquery) 
