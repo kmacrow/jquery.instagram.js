@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../jquery.instagram.css" />
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="../jquery.instagram.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('#instagram').instagram({
+                'tag': 'YOUR_UNIQUE_TAG_HERE',
+          'client_id': 'YOUR_CLIENT_ID_HERE',
+              'proxy': 'http://example.com/proxy.py',
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="instagram" class="instagram"></div>
+  </body>
+</html>
