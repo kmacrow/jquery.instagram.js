@@ -11,76 +11,72 @@
 (function($)
 {
 
-	'use strict';
+  'use strict';
 
-	var api_base = 'https://api.instagram.com/v1/';
+  $.fn.instagram = function(options) {
+    
+    var $this = this;
 
-	$.fn.instagram = function(options) {
-		
-		var $this = this;
+    var settings = {
+            'tag': null,
+      'client_id': null,
+          'proxy': null,
+        'display': 5
+    };
 
-		var settings = {
-			   'userid': null,
-				  'tag': null,
-			'client_id': null,
-				'proxy': null,
-			  'display': 10
-		};
+    // check settings...
+    for(var key in settings) {
+      if(options.hasOwnProperty(key)
+        && typeof options[key] != 'undefined') {
+        settings[key] = options[key];
+      }
+    }
 
-		for(var key in settings) {
-			if(options.hasOwnProperty(key)
-				&& typeof options[key] != 'undefined') {
-				settings[key] = options[key];
-			}
-		}
+    $.ajax({
+      'url': settings.proxy,
+      'type': 'GET',
+      'data': {'client_id': settings.client_id,
+               'tag': settings.tag},
+      'success': function(data, status, xhr)
+      {
+        var hits = data.data;
+        var images = [];
 
-		// check settings...
+        for(var i = 0; i < hits.length; i++) {
+          var hit = hits[i];
 
-		$.ajax({
-			'url': settings.proxy,
-			'type': 'GET',
-			'data': {'url': api_base + 'tags/' + settings.tag 
-							+ '/media/recent/?client_id=' + settings.client_id},
-			'success': function(data, status, xhr)
-			{
-				var hits = data.data;
-				var images = [];
+          images.push({
+            'thumb': hit.images.thumbnail.url,
+            'full': hit.images.standard_resolution.url,
+            'text': hit.caption.text,
+            'created': parseInt(hit.created_time),
+            'filter': hit.filter,
+            'likes': hit.likes.count,
+            'name': hit.user.full_name 
+          });
+        }
 
-				for(var i = 0; i < hits.length; i++) {
-					var hit = hits[i];
+        images.sort(function(a, b){
+          return b.created - a.created;
+        });
 
-					images.push({
-						'thumb': hit.images.thumbnail.url,
-						'full': hit.images.standard_resolution.url,
-						'text': hit.caption.text,
-						'created': parseInt(hit.created_time),
-						'filter': hit.filter,
-						'likes': hit.likes.count,
-						'name': hit.user.full_name 
-					});
-				}
+        images = images.slice(0, settings.display);
 
-				images.sort(function(a, b){
-					return b.created - a.created;
-				});
+        console.log(images);
 
-				images = images.slice(0, settings.display);
+        for(var i = 0; i < images.length; i++) {
+          var image = images[i];
+          $this.append('<img src="' + image.thumb 
+            + '" title="'+image.text+'" onclick="window.open(\''+image.full+'\')" />');
+        }
 
-				console.log(images);
+      },
+      'error': function()
+      {
+        console.error('instagram: failed to load.');
+      }
+    })
 
-				for(var i = 0; i < images.length; i++) {
-					var image = images[i];
-					$this.append('<img src="' + image.thumb 
-						+ '" class="img img-polaroid" />');
-				}
-
-			},
-			'error': function()
-			{
-				console.error('instagram: failed to load.');
-			}
-		})
-
-	}
+  }
 
 })(jQuery);
