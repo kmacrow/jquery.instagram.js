@@ -35,10 +35,12 @@
     $.ajax({
       'url': settings.proxy,
       'type': 'GET',
+      'dataType': 'json',
       'data': {'client_id': settings.client_id,
                'tag': settings.tag},
       'success': function(data, status, xhr)
       {
+        console.log(data);
         var hits = data.data;
         var images = [];
 
